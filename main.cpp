@@ -6,15 +6,36 @@
 
 #include "openssl_rsa.h"
 
-using namespace std;
-
-
-int main() {
-
+int main (int argc, const char *argv[]) 
+{
     LOG("OpenSSL_RSA has been started.");
     
     RSA *private_key;
     RSA *public_key;
+
+    for (count = 0; count < argc; count++)
+    {
+        if (std::string(argv[count]) == "/r") // Private Key
+        {
+            
+        }
+
+        else if (std::string(argv[count]) == "/u") // Public Key
+        {
+            
+        }
+
+        else if (std::string(argv[count]) == "/d") // Decrypt
+        {
+
+        }
+        
+        else if (std::string(argv[count]) == "/e") // Encrypt
+        {
+            
+        }
+        
+    }
 
     char message[KEY_LENGTH / 8] = "Batuhan AVLAYAN - OpenSSL_RSA demo";
     char *encrypt = NULL;
@@ -37,9 +58,12 @@ int main() {
 
     encrypt = (char*)malloc(RSA_size(public_key));
     int encrypt_length = public_encrypt(strlen(message) + 1, (unsigned char*)message, (unsigned char*)encrypt, public_key, RSA_PKCS1_OAEP_PADDING);
-    if(encrypt_length == -1) {
+
+    if (encrypt_length == -1) 
+    {
         LOG("An error occurred in public_encrypt() method");
     }
+
     LOG("Data has been encrypted.");
 
     create_encrypted_file(encrypt, public_key);
@@ -47,9 +71,12 @@ int main() {
 
     decrypt = (char *)malloc(encrypt_length);
     int decrypt_length = private_decrypt(encrypt_length, (unsigned char*)encrypt, (unsigned char*)decrypt, private_key, RSA_PKCS1_OAEP_PADDING);
-    if(decrypt_length == -1) {
+
+    if (decrypt_length == -1) 
+    {
         LOG("An error occurred in private_decrypt() method");
     }
+
     LOG("Data has been decrypted.");
 
     FILE *decrypted_file = fopen("decrypted_file.txt", "w");
