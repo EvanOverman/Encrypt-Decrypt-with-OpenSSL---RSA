@@ -1,5 +1,5 @@
 #include <iostream>
-#include <string.h>
+#include <string>
 #include <openssl/rsa.h>
 #include <openssl/pem.h>
 #include <openssl/err.h>
@@ -13,26 +13,43 @@ int main (int argc, const char *argv[])
     RSA *private_key;
     RSA *public_key;
 
+    std::string private_key_pem = "private_key";
+    std::string public_key_pem = "public_key";
+
+    bool do_decrypt = false;
+    bool do_encrypt = false;
+
+    std::string encrypted_file = "encrypted_file.bin";
+    std::string outfile = "decrypted_file.txt"
+
     for (count = 0; count < argc; count++)
     {
         if (std::string(argv[count]) == "/r") // Private Key
         {
-            
+            private_key_pem = std::string(argv[count + 1]);
+            count++;
         }
 
         else if (std::string(argv[count]) == "/u") // Public Key
         {
-            
+            public_key_pem = std::string(argv[count + 1]);
+            count++;
+        }
+
+        else if (std::string(argv[count]) == "/o") // Outfile name
+        {
+            outfile = std::string(argv[count + 1]);
+            count++;
         }
 
         else if (std::string(argv[count]) == "/d") // Decrypt
         {
-
+            do_decrypt = true;
         }
         
         else if (std::string(argv[count]) == "/e") // Encrypt
         {
-            
+            do_encrypt = true;
         }
         
     }
@@ -41,8 +58,7 @@ int main (int argc, const char *argv[])
     char *encrypt = NULL;
     char *decrypt = NULL;
 
-    char private_key_pem[12] = "private_key";
-    char public_key_pem[11]  = "public_key";
+    
 
     LOG(KEY_LENGTH);
     LOG(PUBLIC_EXPONENT);

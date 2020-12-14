@@ -5,8 +5,6 @@
 
 #include "openssl_rsa.h"
 
-using namespace std;
-
 RSA * create_RSA(RSA * keypair, int pem_type, char *file_name) 
 {
     RSA   *rsa = NULL;
