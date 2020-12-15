@@ -1,11 +1,13 @@
 #include <iostream>
 #include <fstream>
+#include <cstring>
 #include <string>
 
 #include "openssl/rsa.h" // <openssl.rsa.h>
 #include "openssl/pem.h" // <openssl/pem.h>
 #include "openssl/err.h" // <openssl/err.h>
-#include "rsa.hpp"
+// #include "rsa.hpp"
+#include "openssl_rsa.h"
 
 int main (int argc, const char *argv[]) 
 {
@@ -76,14 +78,14 @@ int main (int argc, const char *argv[])
     RSA *keypair = RSA_generate_key(KEY_LENGTH, PUBLIC_EXPONENT, NULL, NULL);
     std::clog << "Generate key has been created.\n";
 
-    private_key = rsa::create_RSA(keypair, PRIVATE_KEY_PEM, private_key_pem);
+    private_key = create_RSA(keypair, PRIVATE_KEY_PEM, private_key_pem);
     std::clog << "Private key pem file has been created.\n";
 
-    public_key  = rsa::create_RSA(keypair, PUBLIC_KEY_PEM, public_key_pem);      
+    public_key  = create_RSA(keypair, PUBLIC_KEY_PEM, public_key_pem);      
     std::clog << "Public key pem file has been created.\n";
 
     encrypt = (char*)malloc(RSA_size(public_key));
-    int encrypt_length = rsa::public_encrypt(strlen(message.c_str()) + 1, (unsigned char*)message.c_str(), (unsigned char*)encrypt, public_key, RSA_PKCS1_OAEP_PADDING);
+    int encrypt_length = public_encrypt(strlen(message.c_str()) + 1, (unsigned char*)message.c_str(), (unsigned char*)encrypt, public_key, RSA_PKCS1_OAEP_PADDING);
 
     if (encrypt_length == -1) 
     {
@@ -93,11 +95,11 @@ int main (int argc, const char *argv[])
 
     std::clog << "Data has been encrypted.\n";
 
-    rsa::create_encrypted_file(encrypt, public_key);
+    create_encrypted_file(encrypt, public_key, outfile);
     std::clog << "Encrypted file has been created.\n";
 
     decrypt = (char *)malloc(encrypt_length);
-    int decrypt_length = rsa::private_decrypt(encrypt_length, (unsigned char*)encrypt, (unsigned char*)decrypt, private_key, RSA_PKCS1_OAEP_PADDING);
+    int decrypt_length = private_decrypt(encrypt_length, (unsigned char*)encrypt, (unsigned char*)decrypt, private_key, RSA_PKCS1_OAEP_PADDING);
 
     if (decrypt_length == -1) 
     {
